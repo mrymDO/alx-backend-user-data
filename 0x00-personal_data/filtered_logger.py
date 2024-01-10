@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
-"""Regex-ing"""
+"""
+Regex-ing
+"""
 import re
+from typing import List
 
 
-def filter_datum(fields, redaction, message, separator):
-    """returns the log message obfuscated"""
+def filter_datum(
+     fields: List[str], redaction: str, message: str, separator: str) -> str:
+    """
+    returns the log message obfuscated
+    """
     return re.sub(r'{}(?={})'.format(
         '|'.join(fields), re.escape(separator)), redaction, message)
