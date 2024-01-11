@@ -5,9 +5,28 @@ filtered logger
 import re
 from typing import List
 import logging
+import mysql.connector
+import os
 
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
+
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """returns a connector to database"""
+    username = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    dbname = os.getenv('PERSONAL_DATA_DB_NAME', 'my_db')
+
+    db = mysql.connector.connect(
+        user=username,
+        password=password,
+        host=host,
+        database=dbname
+    )
+
+    return db
 
 
 class RedactingFormatter(logging.Formatter):
