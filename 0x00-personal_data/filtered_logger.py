@@ -30,6 +30,19 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     return db
 
 
+def main():
+    """main"""
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    message = cursor
+    logger = get_logger()
+    logger.info(message)
+
+    cursor.close()
+    db.close()
+
+
 class RedactingFormatter(logging.Formatter):
     """ Redacting Formatter class
         """
@@ -79,3 +92,7 @@ def get_logger() -> logging.Logger:
     logger.addHandler(handler)
 
     return logger
+
+
+if __name__ == "__main__":
+    main()
