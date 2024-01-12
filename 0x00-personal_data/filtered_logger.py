@@ -13,7 +13,9 @@ PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
-    """returns a connector to database"""
+    """
+    returns a connector to database
+    """
     username = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
     password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
     host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
@@ -31,7 +33,9 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
 
 
 def main():
-    """main"""
+    """
+    Display each row of users table from the db
+    """
     db = get_db()
     cursor = db.cursor()
     cursor.execute("SELECT * FROM users;")
@@ -44,9 +48,9 @@ def main():
 
 
 class RedactingFormatter(logging.Formatter):
-    """ Redacting Formatter class
-        """
-
+    """
+    Redacting Formatter class
+    """
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
@@ -82,7 +86,9 @@ def filter_datum(
 
 
 def get_logger() -> logging.Logger:
-    """returns a logger"""
+    """
+    returns a logger
+    """
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
     logger.propagate = False
