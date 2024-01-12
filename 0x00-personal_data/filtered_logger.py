@@ -39,9 +39,9 @@ def main():
     db = get_db()
     cursor = db.cursor()
     cursor.execute("SELECT * FROM users;")
-    message = cursor
+    result = cursor.fetchall()
     logger = get_logger()
-    logger.info(message)
+    logger.info(result)
 
     cursor.close()
     db.close()
@@ -94,7 +94,7 @@ def get_logger() -> logging.Logger:
     logger.propagate = False
 
     handler = logging.StreamHandler()
-    handler.setFormatter(RedactionFormatter(list(PII_FIELDS)))
+    handler.setFormatter(RedactingFormatter(list(PII_FIELDS)))
     logger.addHandler(handler)
 
     return logger
