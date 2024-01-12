@@ -39,11 +39,9 @@ def main():
     db = get_db()
     cursor = db.cursor()
     logger = get_logger()
-    cursor.execute("SELECT * FROM users;")
-    fields = cursor.column_names
-    for row in cursor:
-        message = "".join("{}={}; ".format(k, v) for k, v in zip(fields, row))
-        logger.info(message.strip())
+    cursor.execute("SELECT COUNT(*) FROM users;")
+    count = cursor.fetchone()[0]
+    logger.info(count)
 
     cursor.close()
     db.close()
