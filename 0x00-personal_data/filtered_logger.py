@@ -39,9 +39,9 @@ def main():
     db = get_db()
     cursor = db.cursor()
     logger = get_logger()
-    cursor.execute("SELECT COUNT(*) FROM users;")
-    count = cursor.fetchone()[0]
-    logger.info(count)
+    cursor.execute("SELECT * FROM users;")
+    message = cursor
+    logger.info(message)
 
     cursor.close()
     db.close()
