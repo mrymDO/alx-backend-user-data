@@ -38,10 +38,12 @@ def main():
     """
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM users;")
-    result = cursor.fetchall()
     logger = get_logger()
-    logger.info(result)
+    cursor.execute("SELECT * FROM users;")
+    fields = cursor.column_names
+    for row in cursor:
+        message = "".join("{}={}; ".format(k, v) for k, v in zip(fields, row))
+        logger.info(message.strip())
 
     cursor.close()
     db.close()
