@@ -33,3 +33,12 @@ def unauthorized_endpoint() -> str:
     Raise a 401 error to trigger the unauthorized error handler
     """
     abort(401)
+
+
+# task2 New endpoint for testing forbidden error handler
+@app_views.route('/forbidden',  methods=['GET'], strict_slashes=False)
+def forbidden_endpoint() -> str:
+    """ GET /api/v1/forbidden
+    Raise a 403 error for forbidden error handler
+    """
+    abort(403)
