@@ -15,11 +15,11 @@ CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 #task5 Create an instance of Auth based on the AUTH_TYPE
 auth = None
-auth_type = os.getenv("AUTH_TYPE", None)
-if auth_type:
-    if auth_type == "basic_auth":
-        from api.v1.auth.basic_auth import BasicAuth
-        auth = BasicAuth()
+auth_type = os.getenv("AUTH_TYPE", 'auth')
+
+if auth_type == "basic_auth":
+    from api.v1.auth.basic_auth import BasicAuth
+    auth = BasicAuth()
         
 
 @app.errorhandler(404)
@@ -47,17 +47,15 @@ def forbidden(error) -> str:
 def before_request():
     """ Before request handler
     """
-    if auth is None:
-        return
-
-    excluded_paths = [
+    if auth:
+        excluded_paths = [
             '/api/v1/status/', '/api/v1/unauthorized/', '/api/v1/forbidden/']
-    if request.path not in excluded_paths and not\
-            auth.require_auth(request.path, excluded_paths):
-                if auth.authorization_header(request) is None:
-                    abort(401)
-                elif auth.current_userr(request) is None:
-                    abort(403)
+
+        if auth.require_auth(request.path, excluded_paths):
+            if auth.authorization_header(request) is None:
+                abort(401)
+            if auth.current_user(request) is None:
+                abort(403)
 
 
 if __name__ == "__main__":
