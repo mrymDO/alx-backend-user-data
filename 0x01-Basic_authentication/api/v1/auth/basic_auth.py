@@ -6,6 +6,7 @@ from api.v1.auth.auth import Auth
 import base64
 from models.user import User
 from typing import TypeVar
+from api.v1.auth.auth import Auth
 
 
 class BasicAuth(Auth):
@@ -75,3 +76,16 @@ class BasicAuth(Auth):
             return None
 
         return user_instance
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """ Get the current user from the request using Basic Authentication
+        """
+        if request is not None:
+            auth_header = self.authorization_header(request)
+            base64_auth_header = self.extract_base64_authorization_header(auth_header)
+            decoded_auth_header = self.decode_base64_authorization_header(base64_auth_header)
+            user_email, user_pwd = self.extract_user_credentials(decoded_auth_header)
+            user = self.user_object_from_credentials(user_email, user_pwd)
+            
+            return user
+        return None
