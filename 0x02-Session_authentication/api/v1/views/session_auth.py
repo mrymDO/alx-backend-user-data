@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """ Routes for Session authentication
 """
-from flask import jsonify, request
+from flask import jsonify, request, abort
 from api.v1.views import app_views
 from models.user import User
 import os
-
 
 
 @app_views.route('/auth_session/login', methods=['POST'], strict_slashes=False)
@@ -22,7 +21,7 @@ def login_session() -> str:
 
     users = User.search({"email": email})
     if not users or users == []:
-        return jsonify({"error": "no user found for this email" }), 404
+        return jsonify({"error": "no user found for this email"}), 404
 
     for user in users:
         if user.is_valid_password(password):
@@ -33,4 +32,18 @@ def login_session() -> str:
             response = jsonify(user_data)
             response.set_cookie(session_name, session_id)
             return response
-        return jsonify({ "error": "wrong password" }), 401
+        return jsonify({"error": "wrong password"}), 401
+
+
+@app_views.route('/auth_session/logout',
+                 methods=['DELETE'], strict_slashes=False)
+def logout_session() -> str:
+    """ logout route
+    """
+    from api.v1.app import auth
+    isdestroy = auth.destroy_session(request)
+
+    if isdestroy is False:
+        abort(404)
+
+    return jsonify({}), 200
