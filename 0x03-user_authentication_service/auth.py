@@ -110,9 +110,9 @@ class Auth:
             user = None
         if user is None:
             raise ValueError()
-        hash_password = _hash_password(password)
+        new_password_hash = _hash_password(password)
         self._db.update_user(
-                user.id,
-                hashed_password=new_password_hash,
-                reset_token=None,
+            user.id,
+            hashed_password=new_password_hash,
+            reset_token=None,
         )
