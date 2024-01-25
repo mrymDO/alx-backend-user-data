@@ -6,6 +6,7 @@ import requests
 
 BASE_URL = "http://localhost:5000"
 
+
 def register_user(email: str, password: str) -> None:
     """ register user
     """
@@ -16,6 +17,7 @@ def register_user(email: str, password: str) -> None:
     assert response.status_code == 200
     assert response.json() == {"email": email, "message": "user created"}
 
+
 def log_in_wrong_password(email: str, password: str) -> None:
     """ log in wrong password
     """
@@ -24,6 +26,7 @@ def log_in_wrong_password(email: str, password: str) -> None:
         data={"email": email, "password": password}
     )
     assert response.status_code == 401
+
 
 def log_in(email: str, password: str) -> str:
     """log in
@@ -36,11 +39,13 @@ def log_in(email: str, password: str) -> str:
     assert "session_id" in response.cookies
     return response.cookies["session_id"]
 
+
 def profile_unlogged() -> None:
     """profile unlogged
     """
     response = requests.get(f"{BASE_URL}/profile")
     assert response.status_code == 403
+
 
 def profile_logged(session_id: str) -> None:
     """profile logged
@@ -52,6 +57,7 @@ def profile_logged(session_id: str) -> None:
     assert response.status_code == 200
     assert response.json() == {"email": "guillaume@holberton.io"}
 
+
 def log_out(session_id: str) -> None:
     """ log out
     """
@@ -61,6 +67,7 @@ def log_out(session_id: str) -> None:
     )
     assert response.status_code == 200
     assert response.json() == {"message": "Bienvenue"}
+
 
 def reset_password_token(email: str) -> str:
     """reset password
@@ -73,12 +80,17 @@ def reset_password_token(email: str) -> str:
     assert "reset_token" in response.json()
     return response.json()["reset_token"]
 
+
 def update_password(email: str, reset_token: str, new_password: str) -> None:
     """update password
     """
     response = requests.put(
         f"{BASE_URL}/reset_password",
-        data={"email": email, "reset_token": reset_token, "new_password": new_password}
+        data={
+            "email": email,
+            "reset_token": reset_token,
+            "new_password": new_password
+        }
     )
     assert response.status_code == 200
     assert response.json() == {"email": email, "message": "Password updated"}
@@ -87,6 +99,7 @@ def update_password(email: str, reset_token: str, new_password: str) -> None:
 EMAIL = "guillaume@holberton.io"
 PASSWD = "b4l0u"
 NEW_PASSWD = "t4rt1fl3tt3"
+
 
 if __name__ == "__main__":
     register_user(EMAIL, PASSWD)
