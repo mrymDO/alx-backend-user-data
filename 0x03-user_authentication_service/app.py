@@ -52,19 +52,12 @@ def login() -> str:
 def logout() -> str:
     """logout and redirect to GET/
     """
-    session_id = request.cookies.get('session_d')
-
-    if session_id is not None:
-        user = AUTH.get_user_from_session_id(session_id)
-        if user is not None:
-            AUTH.destroy_session(user.id)
-            response = redirect(url_for('index'))
-            response.delete_cookie('session_id')
-            return response
-        else:
-            abort(403)
-    else:
+    session_id = request.cookies.get("session_id")
+    user = AUTH.get_user_from_session_id(session_id)
+    if user is None:
         abort(403)
+    AUTH.destroy_session(user.id)
+    return redirect("/")
 
 
 if __name__ == "__main__":
